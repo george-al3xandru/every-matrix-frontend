@@ -1,0 +1,17 @@
+.badge-root {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-xs);
+  border-radius: 0.25rem;
+  background: var(--color-blue-0);
+  text-transform: uppercase;
+  height: 1.55rem;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.badge-content {
+  color: var(--color-blue-6);
+  font-size: 15px;
+  font-weight: 700;
+}
