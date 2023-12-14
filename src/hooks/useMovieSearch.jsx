@@ -52,7 +52,7 @@ const useMovieSearch = () => {
     setLoadingSearch(true);
 
     try {
-      const response = await axios.get(`/discover/movie`, {
+      const response = await axios.get(`/search/movie`, {
         params: {
           query: searchQuery,
           include_adult: false,
