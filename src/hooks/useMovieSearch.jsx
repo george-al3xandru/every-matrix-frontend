@@ -10,7 +10,7 @@ const useMovieSearch = () => {
 
   const debouncedSearchQuery = debounce((value) => {
     setSearchQuery(value);
-  }, 300);
+  }, 500);
 
   const handleSearchQuery = (e) => {
     debouncedSearchQuery(e);
