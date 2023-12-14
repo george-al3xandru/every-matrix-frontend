@@ -3,12 +3,12 @@ import axios from "../api/axios";
 
 const useFetchMovies = (activeGenre) => {
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loadingMovies, setLoadingMovies] = useState(true);
+  const [errorMovies, setErrorMovies] = useState(null);
 
   const fetchMovies = async () => {
     if (!activeGenre) return;
-    setLoading(true);
+    setLoadingMovies(true);
 
     try {
       const response = await axios.get(`/discover/movie`, {
@@ -27,15 +27,15 @@ const useFetchMovies = (activeGenre) => {
 
       setMovies(response.data.results);
     } catch (error) {
-      setError(error);
+      setErrorMovies(error);
     } finally {
-      setLoading(false);
+      setLoadingMovies(false);
     }
   };
 
-  const loadMoreMovies = async (page) => {
-    if (loading) return;
-    setLoading(true);
+  const fetchMoreMovies = async (page) => {
+    if (loadingMovies) return;
+    setLoadingMovies(true);
 
     try {
       const response = await axios.get(`/discover/movie`, {
@@ -56,9 +56,9 @@ const useFetchMovies = (activeGenre) => {
 
       setMovies((prevValues) => [...prevValues, ...newMovies]);
     } catch (error) {
-      setError(error);
+      setErrorMovies(error);
     } finally {
-      setLoading(false);
+      setLoadingMovies(false);
     }
   };
 
@@ -66,7 +66,7 @@ const useFetchMovies = (activeGenre) => {
     fetchMovies();
   }, [activeGenre]);
 
-  return { movies, loading, error, loadMoreMovies };
+  return { movies, loadingMovies, errorMovies, fetchMoreMovies };
 };
 
 export default useFetchMovies;

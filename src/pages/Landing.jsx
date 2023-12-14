@@ -6,17 +6,35 @@ import {
   SearchBar,
   Slider,
 } from "../components";
-import { useFetchGenres } from "../hooks";
-import useInfiniteScroll from "../hooks/useInfiniteScroll";
-import useFetchMovies from "../hooks/useFetchMovies";
+import {
+  useFetchGenres,
+  useFetchMovies,
+  useInfiniteScroll,
+  useMovieSearch,
+} from "../hooks";
 
 const Landing = () => {
   const { genres, activeGenre, loadingGenres, errorGenres, handleActiveGenre } =
     useFetchGenres();
-  const { movies, loading, error, loadMoreMovies } =
+  const {
+    searchQuery,
+    searchResults,
+    loadingSearch,
+    errorSearch,
+    handleSearchQuery,
+    handleClearSearchQuery,
+    searchMoreMovies,
+  } = useMovieSearch();
+  const { movies, loadingMovies, errorMovies, fetchMoreMovies } =
     useFetchMovies(activeGenre);
 
-  const { resetPageNumber } = useInfiniteScroll(loadMoreMovies, 300);
+  const handleInfiniteScroll = searchQuery ? searchMoreMovies : fetchMoreMovies;
+  const { resetPageNumber } = useInfiniteScroll(handleInfiniteScroll, 300);
+
+  const handleSearch = (e) => {
+    handleSearchQuery(e);
+    resetPageNumber();
+  };
 
   const handleGenreSelection = (genreId) => {
     handleActiveGenre(genreId);
@@ -27,8 +45,12 @@ const Landing = () => {
     return <Loader />;
   }
 
-  if (errorGenres) {
-    return <div>Error: {error.message}</div>;
+  if (errorGenres || errorMovies) {
+    return (
+      <div>
+        Error: {errorGenres ? errorGenres.message : errorMovies.message}
+      </div>
+    );
   }
 
   const genresList = genres?.map((genre) => (
@@ -41,16 +63,23 @@ const Landing = () => {
     </Badge>
   ));
 
-  const movieList = movies?.map((movie) => (
-    <MovieCard key={movie.id} movie={movie} />
-  ));
+  const movieList = searchQuery
+    ? searchResults?.map((result) => (
+        <MovieCard key={result.id} movie={result} />
+      ))
+    : movies?.map((movie) => <MovieCard key={movie.id} movie={movie} />);
 
   return (
     <>
-      <SearchBar clearable />
-      <Slider>{genresList}</Slider>
+      <SearchBar
+        searchQuery={searchQuery}
+        handleSearch={handleSearch}
+        handleClearSearchQuery={handleClearSearchQuery}
+        clearable
+      />
+      {!searchQuery && <Slider>{genresList}</Slider>}
       <Grid>{movieList}</Grid>
-      {loading && <Loader />}
+      {loadingMovies && <Loader />}
     </>
   );
 };

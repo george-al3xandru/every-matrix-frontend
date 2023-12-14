@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react";
+import { debounce } from "../utils";
 
 const useInfiniteScroll = (loadMoreFunction, debounceDelay) => {
   const [page, setPage] = useState(1);
 
   const resetPageNumber = () => {
     setPage(1);
-  };
-
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
   };
 
   const shouldLoadMore = () => {

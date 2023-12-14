@@ -1,17 +1,14 @@
-import { useState } from "react";
 import { IoIosSearch, IoIosClose } from "react-icons/io";
 import PropTypes from "prop-types";
 import "./SearchBar.css";
+import { useRef } from "react";
 
 const SearchBar = (props) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchRef = useRef(null);
 
-  const handleSearch = (e) => {
-    setSearchQuery(e);
-  };
-
-  const handleClear = () => {
-    setSearchQuery("");
+  const handlerClear = () => {
+    props.handleClearSearchQuery();
+    searchRef.current.value = "";
   };
 
   return (
@@ -20,14 +17,15 @@ const SearchBar = (props) => {
         <IoIosSearch size={20} />
       </span>
       <input
+        ref={searchRef}
         type="text"
         placeholder="Search..."
         className="search-input"
-        value={searchQuery}
-        onChange={(e) => handleSearch(e.target.value)}
+        defaultValue={props.searchQuery}
+        onChange={(e) => props.handleSearch(e.target.value)}
       />
-      {props.clearable && searchQuery && (
-        <span className="clear-icon" onClick={handleClear}>
+      {props.clearable && props.searchQuery && (
+        <span className="clear-icon" onClick={handlerClear}>
           <IoIosClose size={24} />
         </span>
       )}
@@ -37,6 +35,9 @@ const SearchBar = (props) => {
 
 SearchBar.propTypes = {
   clearable: PropTypes.bool,
+  searchQuery: PropTypes.string,
+  handleSearch: PropTypes.func,
+  handleClearSearchQuery: PropTypes.func,
 };
 
 export default SearchBar;
