@@ -19,16 +19,20 @@
 }
 
 .slider-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.825rem;
-  min-width: 1.825rem;
-  background-color: var(--color-gray-1);
-  cursor: pointer;
-  border: none;
-  border-radius: 50%;
-  box-shadow: rgb(0 0 0 / 15%) 0px 4px 10px;
+  display: none;
+
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.825rem;
+    min-width: 1.825rem;
+    background-color: var(--color-gray-1);
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+    box-shadow: rgb(0 0 0 / 15%) 0px 4px 10px;
+  }
 }
 
 .slider-arrow:hover {

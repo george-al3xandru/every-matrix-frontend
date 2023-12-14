@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { sliderEvents } from "./constants";
 import PropTypes from "prop-types";
 import "./Slider.css";
 
@@ -9,47 +10,34 @@ const Slider = (props) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - sliderRef.current.offsetLeft);
-    setScrollLeft(sliderRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    sliderRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleLeftArrowClick = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft -= 100;
-    }
-  };
-
-  const handleRightArrowClick = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft += 100;
-    }
-  };
+  const eventHandlers = sliderEvents({
+    isDragging,
+    setIsDragging,
+    startX,
+    setStartX,
+    scrollLeft,
+    setScrollLeft,
+    sliderRef,
+  });
 
   return (
     <div className="slider-container">
-      <button className="slider-arrow" onClick={handleLeftArrowClick}>
+      <button
+        className="slider-arrow"
+        onClick={eventHandlers.handleLeftArrowClick}
+      >
         <FaChevronLeft color="black" />
       </button>
       <div
         className="slider-content"
         ref={sliderRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
+        onMouseDown={eventHandlers.handleMouseDown}
+        onMouseMove={eventHandlers.handleMouseMove}
+        onMouseUp={eventHandlers.handleMouseUp}
+        onMouseLeave={eventHandlers.handleMouseUp}
+        onTouchStart={eventHandlers.handleTouchStart}
+        onTouchMove={eventHandlers.handleTouchMove}
+        onTouchEnd={eventHandlers.handleMouseUp}
       >
         <div className="slider-arrows"></div>
         {props.children?.map((child, index) => (
@@ -58,7 +46,10 @@ const Slider = (props) => {
           </div>
         ))}
       </div>
-      <button className="slider-arrow" onClick={handleRightArrowClick}>
+      <button
+        className="slider-arrow"
+        onClick={eventHandlers.handleRightArrowClick}
+      >
         <FaChevronRight color="black" />
       </button>
     </div>
