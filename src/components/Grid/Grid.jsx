@@ -6,7 +6,7 @@ const Grid = (props) => {
 };
 
 Grid.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 export default Grid;

@@ -1,107 +1,56 @@
-import { useEffect, useState } from "react";
-import { Grid, MovieCard, SearchBar } from "../components";
-import axios from "../api/axios";
+import {
+  Badge,
+  Grid,
+  Loader,
+  MovieCard,
+  SearchBar,
+  Slider,
+} from "../components";
+import { useFetchGenres } from "../hooks";
+import useInfiniteScroll from "../hooks/useInfiniteScroll";
+import useFetchMovies from "../hooks/useFetchMovies";
 
 const Landing = () => {
-  const [movies, setMovies] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false); // New loading state for loadMoreMovies
-  const [error, setError] = useState(null);
+  const { genres, activeGenre, loadingGenres, errorGenres, handleActiveGenre } =
+    useFetchGenres();
+  const { movies, loading, error, loadMoreMovies } =
+    useFetchMovies(activeGenre);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  const { resetPageNumber } = useInfiniteScroll(loadMoreMovies, 300);
 
-      try {
-        const response = await axios.get(`/discover/movie`, {
-          params: {
-            include_adult: false,
-            include_video: false,
-            language: "en-US",
-            page: page,
-            sort_by: "popularity.desc",
-          },
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_API_BEARER_TOKEN}`,
-          },
-        });
-
-        setMovies((prevValues) => [...prevValues, ...response.data.results]);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Detect when the bottom of the Grid is reached
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight
-      ) {
-        const nextPage = page + 1;
-        loadMoreMovies(nextPage);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [page]);
-
-  // Fetch the next page of movies
-  const loadMoreMovies = async (page) => {
-    if (loadingMore) return;
-    setLoadingMore(true);
-
-    try {
-      const response = await axios.get(`/discover/movie`, {
-        params: {
-          include_adult: false,
-          include_video: false,
-          language: "en-US",
-          page: page,
-          sort_by: "popularity.desc",
-        },
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_API_BEARER_TOKEN}`,
-        },
-      });
-
-      const newMovies = response.data.results;
-
-      setMovies((prevValues) => [...prevValues, ...newMovies]);
-      setPage((prevValue) => prevValue + 1);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoadingMore(false);
-    }
+  const handleGenreSelection = (genreId) => {
+    handleActiveGenre(genreId);
+    resetPageNumber();
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (loadingGenres) {
+    return <Loader />;
   }
 
-  if (error) {
+  if (errorGenres) {
     return <div>Error: {error.message}</div>;
   }
 
-  const movieList = movies.map((movie) => (
+  const genresList = genres?.map((genre) => (
+    <Badge
+      key={genre.id}
+      active={genre.id === activeGenre}
+      onClick={() => handleGenreSelection(genre.id)}
+    >
+      {genre.name}
+    </Badge>
+  ));
+
+  const movieList = movies?.map((movie) => (
     <MovieCard key={movie.id} movie={movie} />
   ));
 
   return (
     <>
       <SearchBar clearable />
+      <Slider>{genresList}</Slider>
       <Grid>{movieList}</Grid>
-      {loadingMore && <div>Loading more...</div>}
+      {loading && <Loader />}
     </>
   );
 };

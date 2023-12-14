@@ -3,7 +3,11 @@ import "./Badge.css";
 
 const Badge = (props) => {
   return (
-    <div className="badge-root">
+    <div
+      className="badge-root"
+      data-active={props.active ? true : undefined}
+      onClick={props.onClick}
+    >
       <span className="badge-content">{props.children}</span>
     </div>
   );
@@ -11,6 +15,8 @@ const Badge = (props) => {
 
 Badge.propTypes = {
   children: PropTypes.node.isRequired,
+  active: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 export default Badge;

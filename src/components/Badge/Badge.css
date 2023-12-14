@@ -4,14 +4,19 @@
   padding: 0 var(--spacing-xs);
   border-radius: 0.25rem;
   background: var(--color-blue-0);
+  color: var(--color-blue-6);
   text-transform: uppercase;
   height: 1.55rem;
   width: fit-content;
-  cursor: pointer;
+}
+
+.badge-root[data-active="true"] {
+  background: var(--color-blue-6);
+  color: white;
 }
 
 .badge-content {
-  color: var(--color-blue-6);
   font-size: 15px;
   font-weight: 700;
+  white-space: nowrap;
 }
