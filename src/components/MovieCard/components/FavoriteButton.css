@@ -1,0 +1,21 @@
+.star {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #cdcdcd;
+  transition: fill 200ms;
+}
+
+.star[data-active="true"] {
+  color: #ffa600;
+  animation: fav 600ms ease;
+}
+
+@keyframes fav {
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
