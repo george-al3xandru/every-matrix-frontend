@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Grid,
-  Loader,
-  MovieCard,
-  SearchBar,
-  Slider,
-} from "../components";
+import { Loader, SearchBar, MovieList, GenresList } from "../components";
 import {
   useFetchGenres,
   useFetchMovies,
@@ -20,13 +13,19 @@ const Landing = () => {
     searchQuery,
     searchResults,
     loadingSearch,
+    loadingSearchMore,
     errorSearch,
     handleSearchQuery,
     handleClearSearchQuery,
     searchMoreMovies,
   } = useMovieSearch();
-  const { movies, loadingMovies, errorMovies, fetchMoreMovies } =
-    useFetchMovies(activeGenre);
+  const {
+    movies,
+    loadingMovies,
+    loadingMoreMovies,
+    errorMovies,
+    fetchMoreMovies,
+  } = useFetchMovies(activeGenre);
 
   const handleInfiniteScroll = searchQuery ? searchMoreMovies : fetchMoreMovies;
   const { resetPageNumber } = useInfiniteScroll(handleInfiniteScroll, 300);
@@ -45,29 +44,12 @@ const Landing = () => {
     return <Loader />;
   }
 
-  if (errorGenres || errorMovies) {
-    return (
-      <div>
-        Error: {errorGenres ? errorGenres.message : errorMovies.message}
-      </div>
-    );
+  const error = errorGenres || errorMovies || errorSearch;
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
 
-  const genresList = genres?.map((genre) => (
-    <Badge
-      key={genre.id}
-      active={genre.id === activeGenre}
-      onClick={() => handleGenreSelection(genre.id)}
-    >
-      {genre.name}
-    </Badge>
-  ));
-
-  const movieList = searchQuery
-    ? searchResults?.map((result) => (
-        <MovieCard key={result.id} movie={result} />
-      ))
-    : movies?.map((movie) => <MovieCard key={movie.id} movie={movie} />);
+  const listToRender = searchQuery ? searchResults : movies;
 
   return (
     <>
@@ -77,9 +59,19 @@ const Landing = () => {
         handleClearSearchQuery={handleClearSearchQuery}
         clearable
       />
-      {!searchQuery && <Slider>{genresList}</Slider>}
-      <Grid>{movieList}</Grid>
-      {loadingMovies && <Loader />}
+      {!searchQuery && (
+        <GenresList
+          genres={genres}
+          activeGenre={activeGenre}
+          handleGenreSelection={handleGenreSelection}
+        />
+      )}
+      {loadingSearch || loadingMovies ? (
+        <Loader />
+      ) : (
+        <MovieList movies={listToRender} />
+      )}
+      {(loadingMoreMovies || loadingSearchMore) && <Loader />}
     </>
   );
 };

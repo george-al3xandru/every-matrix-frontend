@@ -5,6 +5,7 @@
 }
 
 .card-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -24,6 +25,7 @@
   object-fit: cover;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
+  user-select: none;
 }
 
 .movie-title {

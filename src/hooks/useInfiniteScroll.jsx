@@ -10,7 +10,7 @@ const useInfiniteScroll = (loadMoreFunction, debounceDelay) => {
 
   const shouldLoadMore = () => {
     if (
-      window.innerHeight + window.scrollY >=
+      window.innerHeight + window.scrollY + 50 >=
       document.documentElement.scrollHeight
     ) {
       const nextPage = page + 1;
@@ -23,9 +23,11 @@ const useInfiniteScroll = (loadMoreFunction, debounceDelay) => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("touchend", handleScroll);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("touchend", handleScroll);
     };
   }, [handleScroll]);
 

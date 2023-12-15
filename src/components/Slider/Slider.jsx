@@ -39,7 +39,6 @@ const Slider = (props) => {
         onTouchMove={eventHandlers.handleTouchMove}
         onTouchEnd={eventHandlers.handleMouseUp}
       >
-        <div className="slider-arrows"></div>
         {props.children?.map((child, index) => (
           <div key={index} className="slider-slide">
             {child}

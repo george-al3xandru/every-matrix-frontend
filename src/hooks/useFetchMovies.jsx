@@ -4,6 +4,7 @@ import axios from "../api/axios";
 const useFetchMovies = (activeGenre) => {
   const [movies, setMovies] = useState([]);
   const [loadingMovies, setLoadingMovies] = useState(true);
+  const [loadingMoreMovies, setLoadingMoreMovies] = useState(false);
   const [errorMovies, setErrorMovies] = useState(null);
 
   const fetchMovies = async () => {
@@ -35,7 +36,7 @@ const useFetchMovies = (activeGenre) => {
 
   const fetchMoreMovies = async (page) => {
     if (loadingMovies) return;
-    setLoadingMovies(true);
+    setLoadingMoreMovies(true);
 
     try {
       const response = await axios.get(`/discover/movie`, {
@@ -58,7 +59,7 @@ const useFetchMovies = (activeGenre) => {
     } catch (error) {
       setErrorMovies(error);
     } finally {
-      setLoadingMovies(false);
+      setLoadingMoreMovies(false);
     }
   };
 
@@ -66,7 +67,13 @@ const useFetchMovies = (activeGenre) => {
     fetchMovies();
   }, [activeGenre]);
 
-  return { movies, loadingMovies, errorMovies, fetchMoreMovies };
+  return {
+    movies,
+    loadingMovies,
+    loadingMoreMovies,
+    errorMovies,
+    fetchMoreMovies,
+  };
 };
 
 export default useFetchMovies;

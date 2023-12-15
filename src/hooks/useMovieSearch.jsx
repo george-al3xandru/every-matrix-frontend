@@ -6,6 +6,7 @@ const useMovieSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
+  const [loadingSearchMore, setLoadingSearchMore] = useState(false);
   const [errorSearch, setErrorSearch] = useState(null);
 
   const debouncedSearchQuery = debounce((value) => {
@@ -49,7 +50,7 @@ const useMovieSearch = () => {
 
   const searchMoreMovies = async (page) => {
     if (loadingSearch) return;
-    setLoadingSearch(true);
+    setLoadingSearchMore(true);
 
     try {
       const response = await axios.get(`/search/movie`, {
@@ -70,7 +71,7 @@ const useMovieSearch = () => {
     } catch (error) {
       setErrorSearch(error);
     } finally {
-      setLoadingSearch(false);
+      setLoadingSearchMore(false);
     }
   };
 
@@ -82,6 +83,7 @@ const useMovieSearch = () => {
     searchQuery,
     searchResults,
     loadingSearch,
+    loadingSearchMore,
     errorSearch,
     handleSearchQuery,
     handleClearSearchQuery,
