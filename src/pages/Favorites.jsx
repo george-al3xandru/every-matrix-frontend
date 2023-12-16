@@ -36,7 +36,13 @@ const Favorites = () => {
           handleClick={() => navigate("/")}
         />
       </div>
-      <MovieList movies={filteredMovies} />
+      {filteredMovies.length > 0 ? (
+        <MovieList movies={filteredMovies} />
+      ) : (
+        <p style={{ textAlign: "center", paddingTop: "10px" }}>
+          There are no movies
+        </p>
+      )}
     </>
   );
 };
