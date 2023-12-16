@@ -35,7 +35,7 @@ const useFetchMovies = (activeGenre) => {
   };
 
   const fetchMoreMovies = async (page) => {
-    if (loadingMovies) return;
+    if (loadingMovies || loadingMoreMovies) return;
     setLoadingMoreMovies(true);
 
     try {

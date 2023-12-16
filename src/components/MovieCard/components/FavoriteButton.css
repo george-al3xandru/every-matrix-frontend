@@ -1,9 +1,15 @@
 .star {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 10px;
+  right: 8px;
   color: #cdcdcd;
   transition: fill 200ms;
+  cursor: pointer;
+
+  @media (min-width: 768px) {
+    top: 6px;
+    right: 6px;
+  }
 }
 
 .star[data-active="true"] {

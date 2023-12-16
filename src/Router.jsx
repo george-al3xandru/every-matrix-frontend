@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Landing } from "./pages";
+import { Favorites, Landing } from "./pages";
 import { Layout } from "./layouts";
 
 const router = createBrowserRouter([
@@ -9,6 +9,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Landing />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
       },
     ],
   },

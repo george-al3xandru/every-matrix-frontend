@@ -1,12 +1,21 @@
-import { Loader, SearchBar, MovieList, GenresList } from "../components";
+import { FaStar } from "react-icons/fa";
+import {
+  Loader,
+  SearchBar,
+  MovieList,
+  GenresList,
+  ActionIcon,
+} from "../components";
 import {
   useFetchGenres,
   useFetchMovies,
   useInfiniteScroll,
   useMovieSearch,
 } from "../hooks";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  const navigate = useNavigate();
   const { genres, activeGenre, loadingGenres, errorGenres, handleActiveGenre } =
     useFetchGenres();
   const {
@@ -53,12 +62,21 @@ const Landing = () => {
 
   return (
     <>
-      <SearchBar
-        searchQuery={searchQuery}
-        handleSearch={handleSearch}
-        handleClearSearchQuery={handleClearSearchQuery}
-        clearable
-      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <SearchBar
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          handleClearSearchQuery={handleClearSearchQuery}
+          clearable
+        />
+        <ActionIcon
+          Icon={FaStar}
+          color="#FAB005"
+          backgroundColor="#FEF5E1"
+          iconSize={18}
+          handleClick={() => navigate("/favorites")}
+        />
+      </div>
       {!searchQuery && (
         <GenresList
           genres={genres}

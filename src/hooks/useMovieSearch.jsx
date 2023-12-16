@@ -49,7 +49,7 @@ const useMovieSearch = () => {
   };
 
   const searchMoreMovies = async (page) => {
-    if (loadingSearch) return;
+    if (loadingSearch || loadingSearchMore) return;
     setLoadingSearchMore(true);
 
     try {
